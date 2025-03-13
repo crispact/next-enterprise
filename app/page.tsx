@@ -1,66 +1,94 @@
-import { Metadata } from "next"
-import { Button } from "components/Button/Button"
+"use client"
+import useSWR, { Fetcher } from "swr"
+import { useShallow } from "zustand/react/shallow"
+import Modal from "@components/Pokemon/Modal"
+import { getColumnsDefinition, PokemonResult } from "@components/Table/columns"
+import DataTable from "@components/Table/data-table"
+import useAppStore from "../store/app.store"
+import { Pokemon } from "../types/pokemon"
 
-import { LP_GRID_ITEMS } from "lp-items"
-
-export const metadata: Metadata = {
-  title: "Next.js Enterprise Boilerplate",
-  twitter: {
-    card: "summary_large_image",
-  },
-  openGraph: {
-    url: "https://next-enterprise.vercel.app/",
-    images: [
-      {
-        width: 1200,
-        height: 630,
-        url: "https://raw.githubusercontent.com/Blazity/next-enterprise/main/.github/assets/project-logo.png",
-      },
-    ],
-  },
+type PokemonResponse = {
+  results: PokemonResult[]
+  count: number
+  next: string
+  previous: string
 }
 
+const fetcherSearch: Fetcher<PokemonResponse, string | undefined> = (...args) =>
+  fetch(...args).then((res) => res.json()) as Promise<PokemonResponse>
+
+const fetcherPokemon: Fetcher<Pokemon, string | undefined> = (...args) =>
+  fetch(...args).then((res) => res.json()) as Promise<Pokemon>
+
+const fetcherPokemonSearch: Fetcher<Pokemon, string | undefined> = (...args) =>
+  fetch(...args).then((res) => res.json()) as Promise<Pokemon>
+
 export default function Web() {
-  return (
-    <>
-      <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto grid max-w-(--breakpoint-xl) px-4 py-8 text-center lg:py-16">
-          <div className="mx-auto place-self-center">
-            <h1 className="mb-4 max-w-2xl text-4xl leading-none font-extrabold tracking-tight md:text-5xl xl:text-6xl dark:text-white">
-              Next.js Enterprise Boilerplate
-            </h1>
-            <p className="mb-6 max-w-2xl font-light text-gray-500 md:text-lg lg:mb-8 lg:text-xl dark:text-gray-400">
-              Jumpstart your enterprise project with our feature-packed, high-performance Next.js boilerplate!
-              Experience rapid UI development, AI-powered code reviews, and an extensive suite of tools for a smooth and
-              enjoyable development process.
-            </p>
-            <Button href="https://github.com/Blazity/next-enterprise" className="mr-3">
-              Get started
-            </Button>
-            <Button
-              href="https://vercel.com/new/git/external?repository-url=https://github.com/Blazity/next-enterprise"
-              intent="secondary"
-            >
-              Deploy Now
-            </Button>
-          </div>
-        </div>
-      </section>
-      <section className="bg-white dark:bg-gray-900">
-        <div className="mx-auto max-w-(--breakpoint-xl) px-4 py-8 sm:py-16 lg:px-6">
-          <div className="justify-center space-y-8 md:grid md:grid-cols-2 md:gap-12 md:space-y-0 lg:grid-cols-3">
-            {LP_GRID_ITEMS.map((singleItem) => (
-              <div key={singleItem.title} className="flex flex-col items-center justify-center text-center">
-                <div className="bg-primary-100 dark:bg-primary-900 mb-4 flex size-10 items-center justify-center rounded-full p-1.5 text-blue-700 lg:size-12">
-                  {singleItem.icon}
-                </div>
-                <h3 className="mb-2 text-xl font-bold dark:text-white">{singleItem.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400">{singleItem.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
+  const { pagination, setSelectedPokemonId, selectedPokemonId, search } = useAppStore(
+    useShallow((state) => ({
+      pagination: state.pagination,
+      setSelectedPokemonId: state.setSelectedPokemonId,
+      selectedPokemonId: state.selectedPokemonId,
+      searchText: state.searchText,
+      search: state.search,
+      setSearch: state.setSearch,
+    }))
+  )
+
+  const offset = pagination.pageIndex * pagination.pageSize
+  const { data, isLoading } = useSWR<PokemonResponse, boolean>(
+    !search ? `https://pokeapi.co/api/v2/pokemon?limit=${pagination.pageSize}&offset=${offset}` : null,
+    fetcherSearch
+  )
+  const { data: pokemonResult, isLoading: isPokemonLoading } = useSWR<Pokemon, boolean>(
+    selectedPokemonId !== "" ? `https://pokeapi.co/api/v2/pokemon/${selectedPokemonId}` : null,
+    fetcherPokemon
+  )
+
+  const fetchUrl = `https://pokeapi.co/api/v2/pokemon/${search}`
+  const { data: searchResult, isLoading: isSearchLoading } = useSWR<Pokemon, boolean>(
+    search !== "" ? fetchUrl : null,
+    fetcherPokemonSearch
+  )
+
+  const selectPokemonHandler = (id: string) => {
+    setSelectedPokemonId(id)
+  }
+  let arraySearchResult = null
+
+  if (searchResult) {
+    arraySearchResult = [{ name: searchResult.name, url: `https://pokeapi.co/api/v2/pokemon/${searchResult.id}/` }]
+  }
+
+  const columns = getColumnsDefinition(selectPokemonHandler)
+
+  const dataToRender = data?.results || arraySearchResult || []
+  const rowCount = data?.count || arraySearchResult?.length || 0
+  console.log("data", rowCount)
+  return isLoading || isSearchLoading ? (
+    <div role="status" className="flex items-center justify-center">
+      <svg
+        aria-hidden="true"
+        className="h-8 w-8 animate-spin fill-blue-600 text-gray-200 dark:text-gray-600"
+        viewBox="0 0 100 101"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+          fill="currentColor"
+        />
+        <path
+          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+          fill="currentFill"
+        />
+      </svg>
+      <span className="sr-only">Loading...</span>
+    </div>
+  ) : (
+    <div className="container mx-auto py-10">
+      <DataTable columns={columns} data={dataToRender} rowCount={rowCount} />
+      {pokemonResult ? <Modal pokemon={pokemonResult as Pokemon} /> : null}
+    </div>
   )
 }
