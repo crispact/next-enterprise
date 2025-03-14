@@ -1,6 +1,7 @@
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react"
+import { Dialog, DialogPanel } from "@headlessui/react"
 import Image from "next/image"
 import React from "react"
+import { Badge } from "@components//components/ui/badge"
 import useAppStore from "../../store/app.store"
 import { Pokemon } from "../../types/pokemon"
 
@@ -20,8 +21,8 @@ export default function Modal({ pokemon }: PokemonModalProps) {
     >
       <div className="fixed inset-0 w-screen overflow-y-auto p-4">
         <div className="flex min-h-full items-center justify-center">
-          <DialogPanel className="flex w-full max-w-lg flex-col items-center space-y-4 rounded-lg border-3 border-stone-500 bg-fuchsia-200 p-12 shadow-sm">
-            <div className="mt-[-20px] flex w-100 justify-end">
+          <DialogPanel className="relative flex w-full max-w-lg flex-col items-center space-y-4 rounded-lg border-3 border-stone-500 bg-fuchsia-200 p-12 shadow-sm">
+            <div className="absolute top-0 right-0 p-4">
               <button
                 type="button"
                 className="inline-flex cursor-pointer items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:ring-inset"
@@ -36,7 +37,7 @@ export default function Modal({ pokemon }: PokemonModalProps) {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                  <path d="M6 18L18 6M6 6l12 12" className="stroke-2" />
                 </svg>
               </button>
             </div>
@@ -53,31 +54,37 @@ export default function Modal({ pokemon }: PokemonModalProps) {
                   <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm/6 font-medium text-gray-900">Abilities</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      <ul>
+                      <div className="flex flex-wrap items-center gap-x-2">
                         {pokemon.abilities.map((a) => (
-                          <li key={a.ability.name}>{a.ability.name}</li>
+                          <Badge key={a.ability.name} className="mb-2 bg-amber-600">
+                            {a.ability.name}
+                          </Badge>
                         ))}
-                      </ul>
+                      </div>
                     </dd>
                   </div>
                   <div className="border-t-2 border-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm/6 font-medium text-gray-900">Moves</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      <ul>
+                      <div className="flex flex-wrap items-center gap-x-2">
                         {pokemon.moves.map((m) => (
-                          <li>{m.move.name}</li>
+                          <Badge key={m.move.name} className="mb-2 bg-indigo-600">
+                            {m.move.name}
+                          </Badge>
                         ))}
-                      </ul>
+                      </div>
                     </dd>
                   </div>
                   <div className="border-t-2 border-white px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt className="text-sm/6 font-medium text-gray-900">Forms</dt>
                     <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      <ul>
+                      <div className="flex flex-wrap items-center gap-x-2">
                         {pokemon.forms.map((f) => (
-                          <li>{f.name}</li>
+                          <Badge key={f.name} className="mb-2 bg-red-700">
+                            {f.name}
+                          </Badge>
                         ))}
-                      </ul>
+                      </div>
                     </dd>
                   </div>
                 </dl>

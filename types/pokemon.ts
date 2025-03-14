@@ -51,7 +51,7 @@ export type Pokemon = {
         name: string
         url: string
       }
-      order: any
+      order: never
       version_group: {
         name: string
         url: string
@@ -60,31 +60,31 @@ export type Pokemon = {
   }>
   name: string
   order: number
-  past_abilities: Array<any>
-  past_types: Array<any>
+  past_abilities: Array<never>
+  past_types: Array<never>
   species: {
     name: string
     url: string
   }
   sprites: {
     back_default: string
-    back_female: any
+    back_female: never
     back_shiny: string
-    back_shiny_female: any
+    back_shiny_female: never
     front_default: string
-    front_female: any
+    front_female: never
     front_shiny: string
-    front_shiny_female: any
+    front_shiny_female: never
     other: {
       dream_world: {
         front_default: string
-        front_female: any
+        front_female: never
       }
       home: {
         front_default: string
-        front_female: any
+        front_female: never
         front_shiny: string
-        front_shiny_female: any
+        front_shiny_female: never
       }
       "official-artwork": {
         front_default: string
@@ -92,13 +92,13 @@ export type Pokemon = {
       }
       showdown: {
         back_default: string
-        back_female: any
+        back_female: never
         back_shiny: string
-        back_shiny_female: any
+        back_shiny_female: never
         front_default: string
-        front_female: any
+        front_female: never
         front_shiny: string
-        front_shiny_female: any
+        front_shiny_female: never
       }
     }
     versions: {
@@ -167,87 +167,87 @@ export type Pokemon = {
       "generation-iv": {
         "diamond-pearl": {
           back_default: string
-          back_female: any
+          back_female: never
           back_shiny: string
-          back_shiny_female: any
+          back_shiny_female: never
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
         "heartgold-soulsilver": {
           back_default: string
-          back_female: any
+          back_female: never
           back_shiny: string
-          back_shiny_female: any
+          back_shiny_female: never
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
         platinum: {
           back_default: string
-          back_female: any
+          back_female: never
           back_shiny: string
-          back_shiny_female: any
+          back_shiny_female: never
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
       }
       "generation-v": {
         "black-white": {
           animated: {
             back_default: string
-            back_female: any
+            back_female: never
             back_shiny: string
-            back_shiny_female: any
+            back_shiny_female: never
             front_default: string
-            front_female: any
+            front_female: never
             front_shiny: string
-            front_shiny_female: any
+            front_shiny_female: never
           }
           back_default: string
-          back_female: any
+          back_female: never
           back_shiny: string
-          back_shiny_female: any
+          back_shiny_female: never
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
       }
       "generation-vi": {
         "omegaruby-alphasapphire": {
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
         "x-y": {
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
       }
       "generation-vii": {
         icons: {
           front_default: string
-          front_female: any
+          front_female: never
         }
         "ultra-sun-ultra-moon": {
           front_default: string
-          front_female: any
+          front_female: never
           front_shiny: string
-          front_shiny_female: any
+          front_shiny_female: never
         }
       }
       "generation-viii": {
         icons: {
           front_default: string
-          front_female: any
+          front_female: never
         }
       }
     }

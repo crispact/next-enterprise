@@ -40,7 +40,7 @@ export default function Web() {
     !search ? `https://pokeapi.co/api/v2/pokemon?limit=${pagination.pageSize}&offset=${offset}` : null,
     fetcherSearch
   )
-  const { data: pokemonResult, isLoading: isPokemonLoading } = useSWR<Pokemon, boolean>(
+  const { data: pokemonResult } = useSWR<Pokemon, boolean>(
     selectedPokemonId !== "" ? `https://pokeapi.co/api/v2/pokemon/${selectedPokemonId}` : null,
     fetcherPokemon
   )
@@ -64,7 +64,6 @@ export default function Web() {
 
   const dataToRender = data?.results || arraySearchResult || []
   const rowCount = data?.count || arraySearchResult?.length || 0
-  console.log("data", rowCount)
   return isLoading || isSearchLoading ? (
     <div role="status" className="flex items-center justify-center">
       <svg

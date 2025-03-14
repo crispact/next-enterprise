@@ -45,7 +45,7 @@ const DataTable = memo(function DataTable({ columns, data, rowCount }: DataTable
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex items-center p-4">
         <Input
           placeholder="Search pokemon..."
           value={searchText}
@@ -94,13 +94,13 @@ const DataTable = memo(function DataTable({ columns, data, rowCount }: DataTable
             )}
           </TableBody>
         </Table>
-        <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex items-center justify-evenly space-x-2 py-4">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!(table.getCanPreviousPage() && table.getRowCount() > 1)}
-            className="ml-3 w-[100px] cursor-pointer bg-cyan-600 text-blue-100 hover:bg-cyan-900 hover:text-white"
+            className="ml-3 w-[100px] cursor-pointer bg-cyan-600 p-[25px] text-blue-100 hover:bg-cyan-900 hover:text-white"
           >
             Previous
           </Button>
@@ -109,7 +109,7 @@ const DataTable = memo(function DataTable({ columns, data, rowCount }: DataTable
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="mr-3 ml-3 w-[100px] cursor-pointer bg-cyan-600 text-blue-100 hover:bg-cyan-900 hover:text-white"
+            className="mr-3 ml-3 w-[100px] cursor-pointer bg-cyan-600 p-[25px] text-blue-100 hover:bg-cyan-900 hover:text-white"
           >
             Next
           </Button>

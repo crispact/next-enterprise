@@ -1,4 +1,43 @@
+"use client"
+import { useRouter } from "next/navigation"
+
+import { FormEvent, useEffect } from "react"
+import { useShallow } from "zustand/react/shallow"
+import useLoginFormStore from "../../store/login.store"
+
 export function Login() {
+  const { error, setError } = useLoginFormStore(
+    useShallow((state) => ({
+      error: state.error,
+      setError: state.setError,
+    }))
+  )
+
+  useEffect(() => {
+    setError(false)
+  }, [])
+  const router = useRouter()
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+    const username = formData.get("username")
+    const password = formData.get("password")
+
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    })
+
+    if (response.ok) {
+      setError(false)
+      router.push("/")
+    }
+    setError(true)
+    const form = document?.getElementById("login-form") as HTMLFormElement
+    form?.reset()
+  }
   return (
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -6,7 +45,7 @@ export function Login() {
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-6" onSubmit={handleSubmit} id="login-form">
           <div>
             <label htmlFor="username" className="block text-sm/6 font-medium text-gray-900">
               Username
@@ -49,6 +88,7 @@ export function Login() {
               Sign in
             </button>
           </div>
+          {error ? <div className="text-center text-red-700">User or password incorrect</div> : null}
         </form>
       </div>
     </div>
